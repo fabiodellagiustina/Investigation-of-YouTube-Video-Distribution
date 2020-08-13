@@ -140,6 +140,8 @@ class YoutubeIE(lib_general_download.InfoExtractor):
                 video_info = parse_qs(video_info_webpage)
                 if 'account_playback_token' in video_info:
                     break
+                else:
+                    video_info['account_playback_token'] = 'Token not found'
             except (urllib2.URLError, httplib.HTTPException, socket.error), err:
                 self._downloader.trouble(
                     u'ERROR: unable to download video info webpage: %s'
@@ -176,6 +178,10 @@ class YoutubeIE(lib_general_download.InfoExtractor):
         quality)
         Return video url list
         """
+        # Fix to get the system working again. Not a good solution
+        cache_url = video_info['player_response'][0].split('formats')[1].split('"url":"')[1].split('"')[0].replace('\u0026','&')
+        if cache_url:
+            return [('38',cache_url)]
         video_url_list = None
         #req_format = self._downloader.params.get('format', None)
         get_video_template = ('https://www.youtube.com/get_video?'

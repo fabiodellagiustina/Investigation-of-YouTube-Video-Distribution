@@ -48,8 +48,8 @@ LOOP = False
 #LOOP = True
 
 # take related links
-#RELATED = True
-RELATED = False
+RELATED = True
+#RELATED = False
 
 # Image file to save the graphs
 PLOT = False

@@ -154,7 +154,7 @@ def get_youtube_links(url, max_per_page):
     for link in links:
         if link.find("/watch") >= 0:
             if link.startswith('/'):
-                link = ''.join(("http://www.youtube.com", link))
+                link = ''.join(("https://www.youtube.com", link))
             youtube_links.add(link)
             if len(youtube_links) >= max_per_page:
                 break

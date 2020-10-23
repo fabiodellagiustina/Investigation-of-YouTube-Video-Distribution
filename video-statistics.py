@@ -25,7 +25,7 @@ def get_stats(l, keys):
         return d
 
 #### MAIN
-filepath = glob.glob("url-library.txt")
+filepath = glob.glob("url_library.txt")
 filename = filepath.split('/')[-1]
 with open(filepath, 'rt') as url_library:
     url_links = url_library.read().splitlines()

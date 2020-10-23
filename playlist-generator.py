@@ -39,7 +39,7 @@ def youtube_search():
 n_videos = int(input("How many random videos do you want to fetch from YouTube?"))
 ids = []
 for i in range(n_videos):
-    id = youtube_search()
+    id = youtube_search().encode("utf-8")
     print("YouTube video id fetched: ", id)
     ids.append(id)
 with open("url_library.txt", 'w') as file:

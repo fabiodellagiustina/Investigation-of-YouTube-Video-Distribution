@@ -21,7 +21,9 @@ postfix = [' MOV', '.MOV', ' .MOV']
 
 def youtube_search(n):
   youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
-
+  if (n > 50 or n < 0):
+      print("%s OUT OF RANGE\nUsing default 5\n")
+      n = 5
   search_response = youtube.search().list(
     q=random.choice(prefix) + str(random.randint(999, 9999)) + random.choice(postfix),
     part='snippet',

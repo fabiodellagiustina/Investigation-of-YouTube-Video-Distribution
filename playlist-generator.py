@@ -22,7 +22,7 @@ N_VIDEOS_PER_QUERY = 5
 
 prefix = ['IMG ', 'IMG_', 'IMG-', 'DSC ']
 postfix = [' MOV', '.MOV', ' .MOV']
-location = ['Rome' , 'Mumbai', 'Tokyo', 'Los Angeles', 'New York']
+location = ['San Jose' , 'Alexandria', 'Frankfurt', 'Mumbai', 'Tokyo']
 
 def findGeocode(city):
     # try and catch is used to overcome

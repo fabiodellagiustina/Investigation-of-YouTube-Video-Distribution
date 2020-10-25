@@ -68,7 +68,7 @@ class PytomoFTP:
                                     config_pytomo.CENTRALISATION_SERVER, mes)
             return
         try:
-            self.py_ftp.login(user=CENTRALISATION_SERVER_USER, passwd=CENTRALISATION_SERVER_PASSWORD)
+            self.py_ftp.login(user=config_pytomo.CENTRALISATION_SERVER_USER, passwd=config_pytomo.CENTRALISATION_SERVER_PASSWORD)
         except ftplib.all_errors, mes:
             config_pytomo.LOG.error('Could not login to FTP server %s\n%s',
                                     config_pytomo.CENTRALISATION_SERVER, mes)

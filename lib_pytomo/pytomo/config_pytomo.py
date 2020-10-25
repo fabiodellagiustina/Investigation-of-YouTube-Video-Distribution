@@ -13,7 +13,7 @@ USE_PACKAGE_DIR = False
 
 # execute crawl without prompting user for any parameters
 # put to True if you are running jobs automatically
-BATCH_MODE = False
+BATCH_MODE = True
 
 #PROVIDER = None
 PROVIDER = ''

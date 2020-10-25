@@ -3,7 +3,7 @@
 import googleapiclient.discovery
 import datetime
 
-videos_per_query = 5
+videos_per_query = 4
 
 api_service_name = 'youtube'
 api_version = 'v3'

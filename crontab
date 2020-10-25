@@ -1,1 +1,1 @@
-0 * * * * python $HOME/Investigation-of-YouTube-Video-Distribution/lib_pytomo/start_crawl.py -f $HOME/Investigation-of-YouTube-Video-Distribution/video_urls.txt > $HOME/crawl_log-`date +\%Y\%m\%d\%H\%M\%S`.txt
+40 * * * * python $HOME/Investigation-of-YouTube-Video-Distribution/lib_pytomo/start_crawl.py -f $HOME/Investigation-of-YouTube-Video-Distribution/video_urls.txt > $HOME/crawl_log-`date +\%Y\%m\%d\%H\%M\%S`.txt

@@ -40,8 +40,10 @@ LOG_LEVEL = DEBUG
 LOG_PUBLIC_IP = True
 
 # send the archive with the database and logs to the centralisation server
-CENTRALISE_DATA = False
-CENTRALISATION_SERVER = 'pytomo.dtdns.net'
+CENTRALISE_DATA = True
+CENTRALISATION_SERVER = 'pi4.fabiodellagiustina.it'
+CENTRALISATION_SERVER_USER = 'pytomo'
+CENTRALISATION_SERVER_PASSWORD = '123panza'
 
 # loop on input links
 LOOP = False
@@ -105,7 +107,7 @@ MAX_PER_PAGE = 10
 TIME_FRAME = 'today'
 
 #Time delay between consecutive url crawls and download requests (in seconds)
-DELAY_BETWEEN_REQUESTS = 10
+DELAY_BETWEEN_REQUESTS = 1
 # Max duration of round for getting input links
 MAX_ROUND_DURATION = 600
 
@@ -175,10 +177,10 @@ PING_PACKETS = 10
 
 ################################################################################
 # for lib_youtube_download.py
-DOWNLOAD_TIME = 30.0
+DOWNLOAD_TIME = 2.0
 FREQ_FULL_DOWNLOAD = None
 #FREQ_FULL_DOWNLOAD = 40
-MAX_DOWNLOAD_TIME = 600.0
+MAX_DOWNLOAD_TIME = 2.0
 INITIAL_BUFFER = 2.0
 MIN_PLAYOUT_BUFFER = 0.1
 MIN_PLAYOUT_RESTART = 1.0
@@ -349,4 +351,3 @@ BLACK_LISTED = 'das_captcha'
 class BlackListException(Exception):
     "Exception in case the crawler has been blacklisted"
     pass
-

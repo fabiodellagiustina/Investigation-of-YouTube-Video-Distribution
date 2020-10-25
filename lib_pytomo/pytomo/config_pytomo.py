@@ -9,7 +9,7 @@ from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 # use package directory for storing files
 # put it False if you want files in the current working dir (from where pytomo
 # is launched)
-USE_PACKAGE_DIR = False
+USE_PACKAGE_DIR = True
 
 # execute crawl without prompting user for any parameters
 # put to True if you are running jobs automatically
@@ -50,8 +50,8 @@ LOOP = False
 #LOOP = True
 
 # take related links
-RELATED = True
-#RELATED = False
+# RELATED = True
+RELATED = False
 
 # Image file to save the graphs
 PLOT = False
@@ -107,7 +107,7 @@ MAX_PER_PAGE = 10
 TIME_FRAME = 'today'
 
 #Time delay between consecutive url crawls and download requests (in seconds)
-DELAY_BETWEEN_REQUESTS = 1
+DELAY_BETWEEN_REQUESTS = 10
 # Max duration of round for getting input links
 MAX_ROUND_DURATION = 600
 
@@ -177,10 +177,10 @@ PING_PACKETS = 10
 
 ################################################################################
 # for lib_youtube_download.py
-DOWNLOAD_TIME = 2.0
+DOWNLOAD_TIME = 4.0
 FREQ_FULL_DOWNLOAD = None
 #FREQ_FULL_DOWNLOAD = 40
-MAX_DOWNLOAD_TIME = 2.0
+MAX_DOWNLOAD_TIME = 4.0
 INITIAL_BUFFER = 2.0
 MIN_PLAYOUT_BUFFER = 0.1
 MIN_PLAYOUT_RESTART = 1.0

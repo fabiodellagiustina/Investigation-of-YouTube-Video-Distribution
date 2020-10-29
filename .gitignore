@@ -23,7 +23,9 @@ logs/
 results/
 databases/
 templates/
-
+old/
+new/
+.DS_Store
 
 lib
 *.db

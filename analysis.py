@@ -19,11 +19,35 @@ def retrieve_database(db):
     # df = pd.read_sql_table('abc', conn)
     table_date = db.split('/')[-1].split('youtube.')[1].split('.pytomo')[0].replace('-', '_').replace('.', '_')
     table_name = 'pytomo_crawl_' + table_date
-    print(",".join(DB_COLUMNS))
     df = pd.read_sql_query('SELECT ' + ",".join(DB_COLUMNS) + ' FROM ' + table_name + ' WHERE TimeTogetFirstByte NOTNULL OR RedirectUrl NOTNULL', conn)
-    print(df)
+    # print(df)
     conn.close()
     return df
+
+def element_to_row(origin, element):
+    origin['CacheUrl'].append(element['CacheUrl'])
+    origin['IP'].append(element['IP'])
+    origin['ASNumber'].append(element['ASNumber'])
+    origin['PingMin'].append(element['PingMin'])
+    return origin
+
+
+def group_dataframe(df):
+    temp_df = pd.DataFrame(columns=DB_COLUMNS)
+    grouped = df.groupby('Url')
+    for name, group in grouped:
+        # print(name)
+        new_row = dict(zip(DB_COLUMNS, [None, None, [], None, [], [], [], None, None, None]))
+        # print(group.head(1)['ID'])
+        new_row['ID'] = group.head(1).iloc[0]['ID']
+        new_row['Url'] = group.head(1).iloc[0]['Url']
+        new_row['CacheServerDelay'] = group.head(1).iloc[0]['CacheServerDelay']
+        new_row['TimeTogetFirstByte'] = group.tail(1).iloc[0]['TimeTogetFirstByte']
+        for index, row in group.iterrows():
+            new_row = element_to_row(new_row, row)
+        temp_df = temp_df.append(new_row, ignore_index=True)
+    temp_df.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
+    return temp_df
 
 
 #### MAIN
@@ -39,22 +63,28 @@ zips_dest_folder = 'new/'
 
 # create empty vantage points dataframes
 df_us_west_1 = pd.DataFrame(columns=DB_COLUMNS)
+df_us_west_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 df_us_east_1 = pd.DataFrame(columns=DB_COLUMNS)
+df_us_east_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 df_eu_central_1 = pd.DataFrame(columns=DB_COLUMNS)
+df_eu_central_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 df_ap_south_1 = pd.DataFrame(columns=DB_COLUMNS)
+df_ap_south_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 df_ap_northeast_1 = pd.DataFrame(columns=DB_COLUMNS)
+df_ap_northeast_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 
 # retrieve all databases available
 dbs_path = glob.glob(zips_dest_folder + 'ip-*.db')
-print(dbs_path)
 for db in dbs_path:
     df = retrieve_database(db).reset_index(drop=True)
+    # groupby 'Url'
+    df = group_dataframe(df)
+    # print(df)
     # add retrieved dataframe into appropriate vantage point general dataframe
     vantage_hostname = db.split('/')[-1].split('.youtube')[0]             # original: /../ip-172-31-14-163.youtube.2020-10-28.06_00_01.pytomo_database.db
     for v, hostname in VANTAGE_POINT_HOSTNAME_LIST.items():
         if hostname == vantage_hostname:
             df_select = v
-            print(df_select)
             # break
     if df_select == 'us-west-1':
         df_us_west_1 = pd.concat([df_us_west_1, df], axis=0)
@@ -66,18 +96,6 @@ for db in dbs_path:
         df_ap_south_1 = pd.concat([df_ap_south_1, df], axis=0)
     elif df_select == 'ap-northeast-1':
         df_ap_northeast_1 = pd.concat([df_ap_northeast_1, df], axis=0)
-
-
-print(df_us_east_1)
-print(df_eu_central_1)
-print(df_ap_south_1)
-print(df_ap_northeast_1)
-
-print(df_us_west_1['TimeTogetFirstByte'])
-print(df_us_east_1['TimeTogetFirstByte'])
-print(df_eu_central_1['TimeTogetFirstByte'])
-print(df_ap_south_1['TimeTogetFirstByte'])
-print(df_ap_northeast_1['TimeTogetFirstByte'])
 
 # # sanitize all vantage point general dataframes
 # # df_us_west_1
@@ -111,56 +129,58 @@ print(df_ap_northeast_1['TimeTogetFirstByte'])
 # print(drop_index)
 # df_ap_northeast_1.drop(drop_index , inplace=True)
 
-print(df_us_west_1)
-print(df_us_east_1)
-print(df_eu_central_1)
-print(df_ap_south_1)
-print(df_ap_northeast_1)
 
 # extract records for uploaded video and mark vantage point
 vantage_point = []
 columns_uploaded = DB_COLUMNS
 df_uploaded = pd.DataFrame(columns=DB_COLUMNS)
+df_uploaded.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 # df_uploaded = pd.DataFrame(columns=list(itertools.chain(DB_COLUMNS, ['VantagePoint']))
 # df_us_west_1
 subdf = df_us_west_1[df_us_west_1['Url'] == URL_UPLOADED_VIDEO]
-print(subdf)
-print(len(subdf.index))
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['us-west-1']]*len(subdf.index))
 df_us_west_1.drop(subdf.index, inplace=True)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
 # df_us_east_1
 subdf = df_us_east_1[df_us_east_1['Url'] == URL_UPLOADED_VIDEO]
-print(subdf)
-print(len(subdf.index))
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['us-east-1']]*len(subdf.index))
 df_us_east_1.drop(subdf.index, inplace=True)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
 # df_eu_central_1
 subdf = df_eu_central_1[df_eu_central_1['Url'] == URL_UPLOADED_VIDEO]
-print(subdf)
-print(len(subdf.index))
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['eu-central-1']]*len(subdf.index))
 df_eu_central_1.drop(subdf.index, inplace=True)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
 # df_ap_south_1
 subdf = df_ap_south_1[df_ap_south_1['Url'] == URL_UPLOADED_VIDEO]
-print(subdf)
-print(len(subdf.index))
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['ap-south-1']]*len(subdf.index))
 df_ap_south_1.drop(subdf.index, inplace=True)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
 # df_ap_south_1
 subdf = df_ap_northeast_1[df_ap_northeast_1['Url'] == URL_UPLOADED_VIDEO]
-print(subdf)
-print(len(subdf.index))
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['ap-northeast-1']]*len(subdf.index))
-print(df_ap_northeast_1)
 df_ap_northeast_1.drop(subdf.index, inplace=True)
-print(df_ap_northeast_1)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
 
-print(df_uploaded)
-print(vantage_point)
+
 df_uploaded['VantagePoint'] = vantage_point
+
+# sorting by ID and reset index
+df_us_west_1.sort_values('ID', inplace=True)
+df_us_west_1.reset_index(inplace=True, drop=True)
+df_us_east_1.sort_values('ID', inplace=True)
+df_us_east_1.reset_index(inplace=True, drop=True)
+df_eu_central_1.sort_values('ID', inplace=True)
+df_eu_central_1.reset_index(inplace=True, drop=True)
+df_ap_south_1.sort_values('ID', inplace=True)
+df_ap_south_1.reset_index(inplace=True, drop=True)
+df_ap_northeast_1.sort_values('ID', inplace=True)
+df_ap_northeast_1.reset_index(inplace=True, drop=True)
+df_uploaded.sort_values('ID', inplace=True)
+df_uploaded.reset_index(inplace=True, drop=True)
+print(df_us_west_1)
+print(df_us_east_1)
+print(df_eu_central_1)
+print(df_ap_south_1)
+print(df_ap_northeast_1)
 print(df_uploaded)

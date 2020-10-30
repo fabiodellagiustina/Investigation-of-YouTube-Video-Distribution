@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import sqlite3
 import itertools
 
-DB_COLUMNS = ['ID', 'Url', 'CacheUrl', 'CacheServerDelay', 'IP', 'ASNumber', 'PingMin', 'TimeToGetFirstByte', 'RedirectUrl', 'StatusCode']
+DB_COLUMNS = ['ID', 'Url', 'CacheUrl', 'CacheServerDelay', 'IP', 'ASNumber', 'PingMin', 'TimeTogetFirstByte', 'RedirectUrl', 'StatusCode']
 VANTAGE_POINT_HOSTNAME_LIST = {'us-west-1': 'ip-172-31-14-163', 'us-east-1': 'ip-172-31-85-175', 'eu-central-1': 'ip-172-31-43-135', 'ap-south-1': 'ip-172-31-13-30', 'ap-northeast-1': 'ip-172-31-4-22'}
 URL_UPLOADED_VIDEO = 'https://youtu.be/GDJs8iMzNSc'
 
@@ -67,36 +67,46 @@ for db in dbs_path:
     elif df_select == 'ap-northeast-1':
         df_ap_northeast_1 = pd.concat([df_ap_northeast_1, df], axis=0)
 
-print(df_us_west_1)
+
 print(df_us_east_1)
 print(df_eu_central_1)
 print(df_ap_south_1)
 print(df_ap_northeast_1)
 
+print(df_us_west_1['TimeTogetFirstByte'])
+print(df_us_east_1['TimeTogetFirstByte'])
+print(df_eu_central_1['TimeTogetFirstByte'])
+print(df_ap_south_1['TimeTogetFirstByte'])
+print(df_ap_northeast_1['TimeTogetFirstByte'])
 # sanitize all vantage point general dataframes
 # df_us_west_1
+print("Prova")
+print(df_us_west_1)
 df_us_west_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_us_west_1[(df_us_west_1['TimeToGetFirstByte'] == np.nan) & (df_us_west_1['StatusCode'] == 200.0)].index
+print(df_us_west_1)
+print(df_us_west_1['TimeTogetFirstByte'].isnull())
+drop_index = df_us_west_1[(df_us_west_1['TimeTogetFirstByte'].isnull()) & (df_us_west_1['StatusCode'] == 200.0)].index
 print(drop_index)
+print(df_us_west_1.iloc[drop_index])
 df_us_west_1.drop(drop_index , inplace=True)
 # df_us_east_1
 df_us_east_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_us_east_1[(df_us_east_1['TimeToGetFirstByte'] == np.nan) & (df_us_east_1['StatusCode'] == 200.0)].index
+drop_index = df_us_east_1[(df_us_east_1['TimeTogetFirstByte'].isnull()) & (df_us_east_1['StatusCode'] == 200.0)].index
 print(drop_index)
 df_us_east_1.drop(drop_index , inplace=True)
 # df_eu_central_1
 df_eu_central_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_eu_central_1[(df_eu_central_1['TimeToGetFirstByte'] == np.nan) & (df_eu_central_1['StatusCode'] == 200.0)].index
+drop_index = df_eu_central_1[(df_eu_central_1['TimeTogetFirstByte'].isnull()) & (df_eu_central_1['StatusCode'] == 200.0)].index
 print(drop_index)
 df_eu_central_1.drop(drop_index , inplace=True)
 # df_ap_south_1
 df_ap_south_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_ap_south_1[(df_ap_south_1['TimeToGetFirstByte'] == np.nan) & (df_ap_south_1['StatusCode'] == 200.0)].index
+drop_index = df_ap_south_1[(df_ap_south_1['TimeTogetFirstByte'].isnull()) & (df_ap_south_1['StatusCode'] == 200.0)].index
 print(drop_index)
 df_ap_south_1.drop(drop_index , inplace=True)
 # df_ap_northeast_1
 df_ap_northeast_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_ap_northeast_1[(df_ap_northeast_1['TimeToGetFirstByte'] == np.nan) & (df_ap_northeast_1['StatusCode'] == 200.0)].index
+drop_index = df_ap_northeast_1[(df_ap_northeast_1['TimeTogetFirstByte'].isnull()) & (df_ap_northeast_1['StatusCode'] == 200.0)].index
 print(drop_index)
 df_ap_northeast_1.drop(drop_index , inplace=True)
 

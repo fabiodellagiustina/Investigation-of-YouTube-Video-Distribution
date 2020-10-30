@@ -20,7 +20,7 @@ def retrieve_database(db):
     table_date = db.split('/')[-1].split('youtube.')[1].split('.pytomo')[0].replace('-', '_').replace('.', '_')
     table_name = 'pytomo_crawl_' + table_date
     print(",".join(DB_COLUMNS))
-    df = pd.read_sql_query('SELECT ' + ",".join(DB_COLUMNS) + ' FROM ' + table_name, conn)
+    df = pd.read_sql_query('SELECT ' + ",".join(DB_COLUMNS) + ' FROM ' + table_name + ' WHERE TimeTogetFirstByte NOTNULL OR RedirectUrl NOTNULL', conn)
     print(df)
     conn.close()
     return df
@@ -78,37 +78,38 @@ print(df_us_east_1['TimeTogetFirstByte'])
 print(df_eu_central_1['TimeTogetFirstByte'])
 print(df_ap_south_1['TimeTogetFirstByte'])
 print(df_ap_northeast_1['TimeTogetFirstByte'])
-# sanitize all vantage point general dataframes
-# df_us_west_1
-print("Prova")
-print(df_us_west_1)
-df_us_west_1.dropna(subset=['StatusCode'], inplace=True)
-print(df_us_west_1)
-print(df_us_west_1['TimeTogetFirstByte'].isnull())
-drop_index = df_us_west_1[(df_us_west_1['TimeTogetFirstByte'].isnull()) & (df_us_west_1['StatusCode'] == 200.0)].index
-print(drop_index)
-print(df_us_west_1.iloc[drop_index])
-df_us_west_1.drop(drop_index , inplace=True)
-# df_us_east_1
-df_us_east_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_us_east_1[(df_us_east_1['TimeTogetFirstByte'].isnull()) & (df_us_east_1['StatusCode'] == 200.0)].index
-print(drop_index)
-df_us_east_1.drop(drop_index , inplace=True)
-# df_eu_central_1
-df_eu_central_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_eu_central_1[(df_eu_central_1['TimeTogetFirstByte'].isnull()) & (df_eu_central_1['StatusCode'] == 200.0)].index
-print(drop_index)
-df_eu_central_1.drop(drop_index , inplace=True)
-# df_ap_south_1
-df_ap_south_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_ap_south_1[(df_ap_south_1['TimeTogetFirstByte'].isnull()) & (df_ap_south_1['StatusCode'] == 200.0)].index
-print(drop_index)
-df_ap_south_1.drop(drop_index , inplace=True)
-# df_ap_northeast_1
-df_ap_northeast_1.dropna(subset=['StatusCode'], inplace=True)
-drop_index = df_ap_northeast_1[(df_ap_northeast_1['TimeTogetFirstByte'].isnull()) & (df_ap_northeast_1['StatusCode'] == 200.0)].index
-print(drop_index)
-df_ap_northeast_1.drop(drop_index , inplace=True)
+
+# # sanitize all vantage point general dataframes
+# # df_us_west_1
+# print("Prova")
+# print(df_us_west_1)
+# df_us_west_1.dropna(subset=['StatusCode'], inplace=True)
+# print(df_us_west_1)
+# print(df_us_west_1['TimeTogetFirstByte'].isnull())
+# drop_index = df_us_west_1[(df_us_west_1['TimeTogetFirstByte'].isnull()) & (df_us_west_1['StatusCode'] == 200.0)].index
+# print(drop_index)
+# print(df_us_west_1.iloc[drop_index])
+# df_us_west_1.drop(drop_index , inplace=True)
+# # df_us_east_1
+# df_us_east_1.dropna(subset=['StatusCode'], inplace=True)
+# drop_index = df_us_east_1[(df_us_east_1['TimeTogetFirstByte'].isnull()) & (df_us_east_1['StatusCode'] == 200.0)].index
+# print(drop_index)
+# df_us_east_1.drop(drop_index , inplace=True)
+# # df_eu_central_1
+# df_eu_central_1.dropna(subset=['StatusCode'], inplace=True)
+# drop_index = df_eu_central_1[(df_eu_central_1['TimeTogetFirstByte'].isnull()) & (df_eu_central_1['StatusCode'] == 200.0)].index
+# print(drop_index)
+# df_eu_central_1.drop(drop_index , inplace=True)
+# # df_ap_south_1
+# df_ap_south_1.dropna(subset=['StatusCode'], inplace=True)
+# drop_index = df_ap_south_1[(df_ap_south_1['TimeTogetFirstByte'].isnull()) & (df_ap_south_1['StatusCode'] == 200.0)].index
+# print(drop_index)
+# df_ap_south_1.drop(drop_index , inplace=True)
+# # df_ap_northeast_1
+# df_ap_northeast_1.dropna(subset=['StatusCode'], inplace=True)
+# drop_index = df_ap_northeast_1[(df_ap_northeast_1['TimeTogetFirstByte'].isnull()) & (df_ap_northeast_1['StatusCode'] == 200.0)].index
+# print(drop_index)
+# df_ap_northeast_1.drop(drop_index , inplace=True)
 
 print(df_us_west_1)
 print(df_us_east_1)

@@ -50,6 +50,24 @@ def group_dataframe(df):
     return temp_df
 
 
+def hops_statistics(df_list, cacheurl_list):
+    cacheurl_dict_firsthop = dict.fromkeys(cacheurl_list, 0)
+    cacheurl_dict_lasthop = dict.fromkeys(cacheurl_list, 0)
+    for df in df_list:
+        for index, row in df.iterrows():
+            # print(row['CacheUrl'])
+            if (type(row['CacheUrl']) == list) and (len(row['CacheUrl']) == 1):
+                # print(str(row['CacheUrl'][0]))
+                cacheurl_dict_firsthop[row['CacheUrl'][0]] += 1
+            elif (type(row['CacheUrl']) == list) and (len(row['CacheUrl']) > 1):
+                # print(str(row['CacheUrl'][0]))
+                # print(str(row['CacheUrl'][-1]))
+                cacheurl_dict_firsthop[row['CacheUrl'][0]] += 1
+                cacheurl_dict_lasthop[row['CacheUrl'][-1]] += 1
+            else:
+                cacheurl_dict_firsthop[row['CacheUrl']] += 1
+    return [cacheurl_dict_firsthop, cacheurl_dict_lasthop]
+
 #### MAIN
 
 # zips_orig-folder = 'new/'
@@ -232,6 +250,13 @@ df_total = pd.concat([df_total, df_ap_northeast_1], axis = 0, ignore_index=True)
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['ap-northeast-1']]*len(df_ap_northeast_1.index))
 df_total['VantagePoint'] = vantage_point
 
+
+## Get first && last hop occurrences per cacheurl among all the dataframes
+cacheurl_values = df_total['CacheUrl'].values.ravel()
+cacheurl_unique =  pd.unique(cacheurl_values)
+first_hop_stats, last_hop_stats = hops_statistics([df_us_west_1_by_url, df_us_east_1_by_url, df_eu_central_1_by_url, df_ap_south_1_by_url, df_ap_northeast_1], cacheurl_unique)
+
+
 ## Association CacheUrl <-> IP analysis
 cacheurl_values = df_total['CacheUrl'].values.ravel()
 cacheurl_unique =  pd.unique(cacheurl_values)
@@ -265,12 +290,14 @@ grouped_by_vantagepoint_by_cacheurl_test = grouped_by_vantagepoint_by_cacheurl.g
     # print(grouped_by_vantagepoint_by_cacheurl_test.get_group(key), "\n\n")
 df_ping_table = pd.DataFrame(columns=itertools.chain(['CacheUrl'], VANTAGE_POINT_HOSTNAME_LIST))
 for name, group in grouped_by_vantagepoint_by_cacheurl_test:
-    record = dict.fromkeys(itertools.chain(['CacheUrl'], VANTAGE_POINT_HOSTNAME_LIST.values()), np.nan)
+    record = dict.fromkeys(itertools.chain(['CacheUrl'], VANTAGE_POINT_HOSTNAME_LIST.values(), ['CounterFirstHop', 'CounterLastHop']), np.nan)
     record['CacheUrl'] = name
+    record['CounterFirstHop'] = first_hop_stats.get(name)
+    record['CounterLastHop'] = last_hop_stats.get(name)
     for index, row in group.iterrows():
         record[row['VantagePoint']] = row['PingMinGeneral']
     df_ping_table = df_ping_table.append(record, ignore_index=True)
-df_ping_table.set_index('CacheUrl', drop=True, inplace=True)
+# df_ping_table.set_index('CacheUrl', drop=True, inplace=True)
 
 # print(df_us_west_1)
 # print(df_us_east_1)
@@ -280,4 +307,4 @@ df_ping_table.set_index('CacheUrl', drop=True, inplace=True)
 
 # print(df_total)
 
-print(df_ping_table)
+print(df_ping_table.sort_values('CounterFirstHop', ascending=False))

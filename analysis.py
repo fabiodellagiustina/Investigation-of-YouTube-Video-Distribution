@@ -65,7 +65,7 @@ def hops_statistics(df_list, cacheurl_list):
                 cacheurl_dict_firsthop[row['CacheUrl'][0]] += 1
                 cacheurl_dict_lasthop[row['CacheUrl'][-1]] += 1
             else:
-                cacheurl_dict_firsthop[row['CacheUrl']] += 1
+                print("Error in extraction of hops statistics for Timestamp: %s" %(str(row['ID'])))
     return [cacheurl_dict_firsthop, cacheurl_dict_lasthop]
 
 #### MAIN
@@ -254,7 +254,7 @@ df_total['VantagePoint'] = vantage_point
 ## Get first && last hop occurrences per cacheurl among all the dataframes
 cacheurl_values = df_total['CacheUrl'].values.ravel()
 cacheurl_unique =  pd.unique(cacheurl_values)
-first_hop_stats, last_hop_stats = hops_statistics([df_us_west_1_by_url, df_us_east_1_by_url, df_eu_central_1_by_url, df_ap_south_1_by_url, df_ap_northeast_1], cacheurl_unique)
+first_hop_stats, last_hop_stats = hops_statistics([df_us_west_1_by_url, df_us_east_1_by_url, df_eu_central_1_by_url, df_ap_south_1_by_url, df_ap_northeast_1_by_url], cacheurl_unique)
 
 
 ## Association CacheUrl <-> IP analysis

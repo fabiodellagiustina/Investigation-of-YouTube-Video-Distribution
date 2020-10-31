@@ -27,7 +27,6 @@ old/
 .DS_Store
 
 lib
-*.db
 
 test_pytomo/charles/
 

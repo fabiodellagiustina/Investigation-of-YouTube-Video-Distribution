@@ -176,7 +176,7 @@ def plot_cumulative_redirects_test(df1, df2, name):
     # axes[1].ylabel('Cumulated number of redirects')
     custom_ylim = (0, 60)
     plt.setp(axes, ylim=custom_ylim)
-    plt.savefig('/figures/' + availability_zone + '_cumulative_redirect.png')
+    plt.savefig('figures/' + availability_zone + '_cumulative_redirect.png')
     plt.show()
 
 #### MAIN

@@ -34,7 +34,6 @@ test_pytomo/charles/
 pyjamas-0.8alpha1/
 
 *.pdf
-*.png
 *.aux
 *.bbl
 *.blg

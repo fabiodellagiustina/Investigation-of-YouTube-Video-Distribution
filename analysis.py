@@ -88,14 +88,14 @@ def divide_runs(g):
 
 def cumulative_redirect_stats(name, group, popular_video_list, not_popular_video_list):
     hours_list = [12, 18, 0, 6]
-    print(popular_video_list)
-    print(group)
-    print(group['Url'])
-    print(group['Url'].isin(popular_video_list))
+    # print(popular_video_list)
+    # print(group)
+    # print(group['Url'])
+    # print(group['Url'].isin(popular_video_list))
     filt_pop_group = group[group['Url'].isin(popular_video_list)]
     filt_not_pop_group = group[group['Url'].isin(not_popular_video_list)]
-    print(filt_pop_group)
-    print(filt_not_pop_group)
+    # print(filt_pop_group)
+    # print(filt_not_pop_group)
     cacheurl_pop_nredirects = dict.fromkeys(hours_list, 0)
     cacheurl_not_pop_nredirects = dict.fromkeys(hours_list, 0)
     dt_logger = []
@@ -111,13 +111,13 @@ def cumulative_redirect_stats(name, group, popular_video_list, not_popular_video
         dt = datetime.datetime.strptime(row['ID'], '%Y-%m-%d %H:%M:%S.%f')
         cacheurl_not_pop_nredirects[dt.hour] += len(row['CacheUrl'])
         # if (type(row['CacheUrl']) == list) and (len(row['CacheUrl']) == 1):
-    print(cacheurl_pop_nredirects)
-    print(cacheurl_not_pop_nredirects)
+    # print(cacheurl_pop_nredirects)
+    # print(cacheurl_not_pop_nredirects)
     list_of_values = list(zip(cacheurl_pop_nredirects.keys(), cacheurl_pop_nredirects.values(), cacheurl_not_pop_nredirects.values(), dt_logger))
     temp_df = pd.DataFrame(list_of_values, columns=['Hour', 'CumulRedirectsPopular', 'CumulRedirectsNotPopular', 'DateTime'])
     temp_df['Hour'] = temp_df['Hour'].astype(int)
     # temp_df.sort_values('Hour', inplace=True)
-    print(temp_df)
+    # print(temp_df)
     return temp_df
 
 def plot_cumulative_redirects(df, name, r):
@@ -170,8 +170,8 @@ def plot_cumulative_redirects_test(df1, df2, name):
     # axes[1].set_xlabel('Datetime')
     # axes[1].set_ylabel('# redirect (cumulative)')
     figure.suptitle('Vantage point: %s' % (availability_zone))
-    axes[1].set_title('Second run')
-    axes[0].set_title('First run')
+    axes[1].set_title('Second timeframe')
+    axes[0].set_title('First timeframe')
     # axes[1].xlabel('Datetime')
     # axes[1].ylabel('Cumulated number of redirects')
     custom_ylim = (0, 60)
@@ -180,15 +180,6 @@ def plot_cumulative_redirects_test(df1, df2, name):
     plt.show()
 
 #### MAIN
-
-# zips_orig-folder = 'new/'
-zips_dest_folder = 'new/'
-# # retrieve all measurement zips available
-# zips_path = glob.glob(zips_orig-folder + 'ip-*.tbz')
-# # extract all zip files in dest folder
-# for zip_file in zips_path:
-#     with ZipFile(zip_file, 'r') as zip_ref:
-#         zip_ref.extractall(zips_dest_folder)
 
 # create empty vantage points dataframes
 df_us_west_1_by_url = pd.DataFrame(columns=DB_COLUMNS)
@@ -218,12 +209,11 @@ df_ap_northeast_1 = pd.DataFrame(columns=DB_COLUMNS)
 df_ap_northeast_1.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 
 # retrieve all databases available
+zips_dest_folder = 'new/'
 dbs_path = glob.glob(zips_dest_folder + 'ip-*.db')
+print("Retrieving results from all databases...")
 for db in dbs_path:
     df = retrieve_database(db).reset_index(drop=True)
-
-
-
     # group retrieved dataframe by 'Url'
     df_group_by_url = group_dataframe(df)
     # add retrieved dataframe into vantage point daframes for totals, and grouped dataframe into appropriate vantage point general dataframe
@@ -246,41 +236,10 @@ for db in dbs_path:
     elif df_select == 'ap-northeast-1':
         df_ap_northeast_1 = pd.concat([df_ap_northeast_1, df], axis=0)
         df_ap_northeast_1_by_url = pd.concat([df_ap_northeast_1_by_url, df_group_by_url], axis=0)
-
-# # sanitize all vantage point general dataframes
-# # df_us_west_1_by_url
-# print("Prova")
-# print(df_us_west_1_by_url)
-# df_us_west_1_by_url.dropna(subset=['StatusCode'], inplace=True)
-# print(df_us_west_1_by_url)
-# print(df_us_west_1_by_url['TimeTogetFirstByte'].isnull())
-# drop_index = df_us_west_1_by_url[(df_us_west_1_by_url['TimeTogetFirstByte'].isnull()) & (df_us_west_1_by_url['StatusCode'] == 200.0)].index
-# print(drop_index)
-# print(df_us_west_1_by_url.iloc[drop_index])
-# df_us_west_1_by_url.drop(drop_index , inplace=True)
-# # df_us_east_1_by_url
-# df_us_east_1_by_url.dropna(subset=['StatusCode'], inplace=True)
-# drop_index = df_us_east_1_by_url[(df_us_east_1_by_url['TimeTogetFirstByte'].isnull()) & (df_us_east_1_by_url['StatusCode'] == 200.0)].index
-# print(drop_index)
-# df_us_east_1_by_url.drop(drop_index , inplace=True)
-# # df_eu_central_1_by_url
-# df_eu_central_1_by_url.dropna(subset=['StatusCode'], inplace=True)
-# drop_index = df_eu_central_1_by_url[(df_eu_central_1_by_url['TimeTogetFirstByte'].isnull()) & (df_eu_central_1_by_url['StatusCode'] == 200.0)].index
-# print(drop_index)
-# df_eu_central_1_by_url.drop(drop_index , inplace=True)
-# # df_ap_south_1_by_url
-# df_ap_south_1_by_url.dropna(subset=['StatusCode'], inplace=True)
-# drop_index = df_ap_south_1_by_url[(df_ap_south_1_by_url['TimeTogetFirstByte'].isnull()) & (df_ap_south_1_by_url['StatusCode'] == 200.0)].index
-# print(drop_index)
-# df_ap_south_1_by_url.drop(drop_index , inplace=True)
-# # df_ap_northeast_1_by_url
-# df_ap_northeast_1_by_url.dropna(subset=['StatusCode'], inplace=True)
-# drop_index = df_ap_northeast_1_by_url[(df_ap_northeast_1_by_url['TimeTogetFirstByte'].isnull()) & (df_ap_northeast_1_by_url['StatusCode'] == 200.0)].index
-# print(drop_index)
-# df_ap_northeast_1_by_url.drop(drop_index , inplace=True)
-
+print("Done.")
 
 # extract records for uploaded video and mark vantage point
+print("\nExtracting records for uploaded video from dataframes...")
 vantage_point = []
 columns_uploaded = DB_COLUMNS
 df_uploaded = pd.DataFrame(columns=DB_COLUMNS)
@@ -311,9 +270,10 @@ subdf = df_ap_northeast_1_by_url[df_ap_northeast_1_by_url['Url'] == URL_UPLOADED
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['ap-northeast-1']]*len(subdf.index))
 df_ap_northeast_1_by_url.drop(subdf.index, inplace=True)
 df_uploaded = pd.concat([df_uploaded, subdf], axis=0, ignore_index=True)
-
-
+print("Done.")
+print("Assigning VantagePoint column to df_uploaded...")
 df_uploaded['VantagePoint'] = vantage_point
+print("Done.")
 
 # pd.set_option('display.max_rows', None)
 pd.set_option('display.max_colwidth', -1)
@@ -331,16 +291,22 @@ df_ap_northeast_1_by_url.sort_values('ID', inplace=True)
 df_ap_northeast_1_by_url.reset_index(inplace=True, drop=True)
 df_uploaded.sort_values('ID', inplace=True)
 df_uploaded.reset_index(inplace=True, drop=True)
-print(df_us_west_1_by_url)
-print(df_us_east_1_by_url)
-print(df_eu_central_1_by_url)
-print(df_ap_south_1_by_url)
-print(df_ap_northeast_1_by_url)
+# print(df_us_west_1_by_url)
+# print(df_us_east_1_by_url)
+# print(df_eu_central_1_by_url)
+# print(df_ap_south_1_by_url)
+# print(df_ap_northeast_1_by_url)
+print("\n\n---DATAFRAME OF UPLOADED VIDEO---")
 print(df_uploaded)
 
+print("\n\n---DATAFRAME OF UPLOADED VIDEO - ALTERNATIVE ---")
+print(df_uploaded[['VantagePoint', 'ID', 'CacheUrl', 'IP', 'PingMin', 'TimeTogetFirstByte']].sort_values(['VantagePoint', 'ID']))
+print(df_uploaded[['VantagePoint', 'ID', 'CacheUrl', 'IP']].sort_values(['VantagePoint', 'ID']))
+print(df_uploaded[['VantagePoint', 'ID', 'PingMin', 'TimeTogetFirstByte']].sort_values(['VantagePoint', 'ID']))
 
 ### Look for similarieties Url <-> IP from different vantage points (NOTE: video uploaded is not included)
 # add vantage point byurl dataframes into total records (groupedbyurl) dataframe
+print("\n\n---SIMILARITIES VIDEO URL <-> IP BETWEEN DIFFERENT VANTAGE POINTS---")
 vantage_point = []
 df_total_by_url = pd.concat([df_total_by_url, df_us_west_1_by_url], axis = 0, ignore_index=True)
 vantage_point.extend([VANTAGE_POINT_HOSTNAME_LIST['us-west-1']]*len(df_us_west_1_by_url.index))
@@ -356,7 +322,7 @@ df_total_by_url['VantagePoint'] = vantage_point
 df_total_by_url.drop(['RedirectUrl', 'StatusCode'], axis=1, inplace=True)
 # groupby url
 df_total_by_url_grouped = df_total_by_url.groupby('Url')
-print("Table for similarieties Url <-> IP lookup between different vantage points")
+# print("Table for similarieties Url <-> IP lookup between different vantage points")
 for name, group in df_total_by_url_grouped:
     print(name)
     print(group[['ID', 'Url', 'IP', 'VantagePoint']])
@@ -364,6 +330,7 @@ for name, group in df_total_by_url_grouped:
 
 
 ### Cumulative redirect comparison between popular and non-popular videos, by vantage point
+print("\n\n---PLOT CUMULATIVE REDIRECTS POP/NON-POP VIDEOS BY VANTAGE POINT---")
 popular_video_list = []
 with open('popular_video_urls.txt', 'rt') as f:
     for line in f.read().splitlines():
@@ -408,36 +375,45 @@ df_total['VantagePoint'] = vantage_point
 
 
 ## Get first && last hop occurrences per cacheurl among all the dataframes
+# print("\n\n---FIRST AND LAST HOP OCCURRENCES PER CACHEURL IN THE TOTAL---")
 cacheurl_values = df_total['CacheUrl'].values.ravel()
 cacheurl_unique =  pd.unique(cacheurl_values)
 first_hop_stats, last_hop_stats, cumulation_first_redirect_stats = hops_statistics([df_us_west_1_by_url, df_us_east_1_by_url, df_eu_central_1_by_url, df_ap_south_1_by_url, df_ap_northeast_1_by_url], cacheurl_unique)
 
 
 ## Association CacheUrl <-> IP analysis
+print("\n\n---SERVER URL <-> IP ASSOCIATION---")
 cacheurl_values = df_total['CacheUrl'].values.ravel()
 cacheurl_unique =  pd.unique(cacheurl_values)
 print("Number unique CacheUrls: ", len(cacheurl_unique))
 # print("Values unique CacheUrls: ", cacheurl_unique)
 cacheurl_dict = dict.fromkeys(cacheurl_unique, [])
+cacheurl_dict_counter = dict.fromkeys(cacheurl_unique, 0)
 grouped_by_cacheurl = df_total.groupby('CacheUrl')
 # grouped_by_cacheurl = df_total.groupby('CacheUrl').size().reset_index(name='counts')
 # assign cacheurls with related ip
 for name, group in grouped_by_cacheurl:
     unique_ips = pd.unique(group['IP'].values.ravel())
     cacheurl_dict[name] = unique_ips.tolist()
+    cacheurl_dict_counter[name] = len(unique_ips.tolist())
 # print("After", cacheurl_dict)
 # check 1:1 relationship for cacheurl:ip
 cacheurl_ip_rel = []
 for key, value in cacheurl_dict.items():
     cacheurl_ip_rel.append(len(value))
+for key, value in cacheurl_dict_counter.items():
+    print("%s: %d" % (key, value))
+print("\nArray of len:")
 print(cacheurl_ip_rel)
 
 
 ## IP address occurrence in serving requests
+print("\n\n---[DOUBT] IP ADDRESS OCCURRENCES IN SERVING REQUEST IN ALL VANTAGE POINTS---")
 print(df_total.groupby('IP').size().reset_index(name='counts').sort_values('counts', ascending=False))
 
 
 ## PingMin per CacheUrl per vantage point
+print("\n\n---PINGMIN PER SERVER URL PER VANTAGE POINT---")
 grouped_by_vantagepoint_by_cacheurl = df_total.groupby(['VantagePoint', 'CacheUrl'])['PingMin'].min().to_frame(name = 'PingMinGeneral').reset_index()
 # df.set_index('VantagePoint', drop=True, inplace=True)
 # print(grouped_by_vantagepoint_by_cacheurl)
@@ -455,7 +431,7 @@ for name, group in grouped_by_vantagepoint_by_cacheurl_test:
         record[row['VantagePoint']] = row['PingMinGeneral']
     df_ping_table = df_ping_table.append(record, ignore_index=True)
 # df_ping_table.set_index('CacheUrl', drop=True, inplace=True)
-
+print(df_ping_table)
 # print(df_us_west_1)
 # print(df_us_east_1)
 # print(df_eu_central_1)
@@ -465,4 +441,4 @@ for name, group in grouped_by_vantagepoint_by_cacheurl_test:
 # print(df_total)
 
 # print(df_ping_table.sort_values('CounterFirstHop', ascending=False))
-df_ping_table.dropna(axis=0, how='any', inplace=True)
+# df_ping_table.dropna(axis=0, how='any', inplace=True)

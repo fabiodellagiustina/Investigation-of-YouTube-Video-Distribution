@@ -1,0 +1,13 @@
+---PINGMIN PER SERVER URL PER VANTAGE POINT---
+                                     CacheUrl  CounterFirstHop  CounterLastHop  CumulativeFirstRedir  ip-172-31-13-30  ip-172-31-14-163  ip-172-31-4-22  ip-172-31-43-135  ip-172-31-85-175
+0    https://i.ytimg.com                       224.0            0.0             0.0                   1.425            1.771             1.455           0.603             0.560
+1    https://r1---sn-4g5e6nes.googlevideo.com  3.0              0.0             0.0                  NaN              NaN               NaN              0.592            NaN
+2    https://r1---sn-4g5e6nl7.googlevideo.com  3.0              1.0             0.0                  NaN              NaN               NaN              0.553            NaN
+3    https://r1---sn-4g5e6ns7.googlevideo.com  3.0              0.0             2.0                  NaN              NaN               NaN              0.871            NaN
+4    https://r1---sn-4g5e6nzl.googlevideo.com  4.0              1.0             0.0                  NaN              NaN               NaN              1.025            NaN
+..                                        ...  ...              ...             ...                   ..               ..                ..                ...             ..
+401  https://r6---sn-p5qs7nes.googlevideo.com  4.0              0.0             2.0                  NaN              NaN               NaN             NaN                0.551
+402  https://r6---sn-vgqs7nlr.googlevideo.com  0.0              2.0             0.0                  NaN              NaN               NaN             NaN                18.965
+403  https://r6---sn-vgqskn7e.googlevideo.com  0.0              3.0             0.0                  NaN              NaN               NaN             NaN                18.976
+404  https://r6---sn-vgqskn7l.googlevideo.com  0.0              1.0             0.0                  NaN              NaN               NaN             NaN                19.091
+405  https://redirector.googlevideo.com        11.0             0.0             38.0                  1.372           NaN               NaN              0.808             0.572
